@@ -1,0 +1,10 @@
+➤ YN0000: · Yarn 4.1.1
+➤ YN0000: ┌ Resolution step
+➤ YN0000: └ Completed
+➤ YN0000: ┌ Fetch step
+➤ YN0000: └ Completed in 0s 766ms
+➤ YN0000: ┌ Link step
+➤ YN0007: │ @graphcommerce/magento-open-source@workspace:. must be built because it never has been before or the last one failed
+➤ YN0009: │ @graphcommerce/magento-open-source@workspace:. couldn't be built successfully (exit code 1, logs can be found here: /private/var/folders/jz/s1xgdr393198zymmypfn8p040000gn/T/xfs-be24b1bd/build.log)
+➤ YN0000: └ Completed in 0s 998ms
+➤ YN0000: · Failed with errors in 1s 953ms
