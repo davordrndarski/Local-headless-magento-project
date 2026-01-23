@@ -3,25 +3,26 @@ import { cacheFirst } from '@graphcommerce/graphql'
 import type { CmsPageFragment } from '@graphcommerce/magento-cms'
 import { CmsPageContent, CmsPageDocument } from '@graphcommerce/magento-cms'
 import { StoreConfigDocument } from '@graphcommerce/magento-store'
-import { ProductListDocument } from '@graphcommerce/magento-product' // pozivanje proizvoda
+import { ProductListDocument } from '@graphcommerce/magento-product'
 import { breadcrumbs } from '@graphcommerce/next-config/config'
 import { Container, isTypename, LayoutHeader, PageMeta, revalidate } from '@graphcommerce/next-ui'
 import type { GetStaticProps } from '@graphcommerce/next-ui'
 import { t } from '@lingui/core/macro'
-import { Typography } from '@mui/material'
+import { Typography, Box } from '@mui/material'
+import Slider from 'react-slick'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
 import type { LayoutNavigationProps } from '../components'
-import { LayoutDocument, LayoutNavigation, productListRenderer, ProductListItems } from '../components'  // pozivanje proizvoda
+import { LayoutDocument, LayoutNavigation, productListRenderer, ProductListItems } from '../components'
 import { graphqlSharedClient, graphqlSsrClient } from '../lib/graphql/graphqlSsrClient'
 import { GetCmsBlockDocument } from '../graphql/CmsBlock.gql'
 
-// Definišemo tip za CMS blok
 type CmsBlockType = {
   identifier: string
   title: string
   content: string
 }
 
-// Props kombinuju CMS Page, Custom blokove I PROIZVODE
 export type CmsPageProps = { 
   cmsPage: CmsPageFragment | null
   testBlok?: CmsBlockType | null
@@ -34,20 +35,34 @@ type GetPageStaticProps = GetStaticProps<LayoutNavigationProps, CmsPageProps>
 function HomePage(props: CmsPageProps) {
   const { cmsPage, testBlok, testBlokDva, products } = props
 
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    arrows: true,
+    swipe: true,
+    responsive: [
+      { breakpoint: 1024, settings: { slidesToShow: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 2 } },
+      { breakpoint: 640, settings: { slidesToShow: 1 } }
+    ]
+  }
+
   if (!cmsPage) return <Container>Configure cmsPage home</Container>
 
   return (
     <>
-      {/* SEO Meta tagovi */}
       <PageMeta
         title={cmsPage.meta_title || cmsPage.title || t`Home`}
         metaDescription={cmsPage.meta_description || undefined}
       />
       
-      {/* Header */}
       <LayoutHeader floatingMd hideMd={breadcrumbs} floatingSm />
 
-      {/* PRVI CUSTOM BLOK - test_blok */}
       {testBlok?.content && (
         <Container 
           sx={{ 
@@ -64,22 +79,39 @@ function HomePage(props: CmsPageProps) {
         </Container>
       )}
 
+      {/* BAGS PROIZVODI - SLIDER */}
       {products?.items && products.items.length > 0 && (
-        <>
-          <Typography variant="h3">Bags Collection</Typography>
-          <ProductListItems
-            items={products.items}
-            renderers={productListRenderer}
-            loadingEager={6}
-            title="Bags Collection"
-          />
-        </>
+        <Container sx={{ my: 6 }}>
+          <Typography variant="h3" component="h2" sx={{ mb: 4, textAlign: 'center' }}>
+            Bags Collection
+          </Typography>
+          
+          <Box sx={{ 
+            '& .slick-slide > div': { 
+              px: 1,
+              outline: 'none'
+            },
+            '& .slick-dots': { bottom: -40 },
+            '& .slick-arrow:before': { color: 'primary.main', fontSize: 40 }
+          }}>
+            <Slider {...sliderSettings}>
+              {products.items.map((product: any) => (
+                <div key={product.uid}>
+                  <ProductListItems
+                    items={[product]}
+                    renderers={productListRenderer}
+                    loadingEager={1}
+                    title=""
+                  />
+                </div>
+              ))}
+            </Slider>
+          </Box>
+        </Container>
       )}
 
-      {/* GLAVNI CMS PAGE SADRŽAJ - kategorije proizvoda, itd. */}
       <CmsPageContent cmsPage={cmsPage} productListRenderer={productListRenderer} />
 
-      {/* DRUGI CUSTOM BLOK - test_blok_dva */}
       {testBlokDva?.content && (
         <Container 
           sx={{ 
@@ -113,42 +145,26 @@ export const getStaticProps: GetPageStaticProps = async (context) => {
   const confData = (await conf).data
   const url = confData?.storeConfig?.cms_home_page ?? 'home'
   
-  // Povlači CMS Page (home page sa kategorijama)
   const cmsPageQuery = staticClient.query({ query: CmsPageDocument, variables: { url } })
-  
-  // Povlači Layout (menu, footer)
-  const layout = staticClient.query({
-    query: LayoutDocument,
-    fetchPolicy: cacheFirst(staticClient),
-  })
-  
-  // Povlači custom CMS blokove
+  const layout = staticClient.query({ query: LayoutDocument, fetchPolicy: cacheFirst(staticClient) })
   const cmsBlockQuery = staticClient.query({
     query: GetCmsBlockDocument,
-    variables: { 
-      identifiers: ['test_blok', 'test_blok_dva']
-    }
+    variables: { identifiers: ['test_blok', 'test_blok_dva'] }
   })
-
-  // Povlači proizvode iz Bags kategorije
   const productsQuery = staticClient.query({
     query: ProductListDocument,
     variables: {
       pageSize: 14,
       currentPage: 1,
-      filters: {
-        category_url_path: { eq: "gear/bags" }
-      }
+      filters: { category_url_path: { eq: "gear/bags" } }
     }
   })
 
-  // Izvlačimo podatke
   const cmsPage = (await cmsPageQuery).data?.route
   const cmsBlockData = (await cmsBlockQuery).data
   const blocks = cmsBlockData?.cmsBlocks?.items || []
   const productsData = (await productsQuery).data
   
-  // Pronalazimo blokove po identifieru
   const testBlok = blocks.find((b: any) => b.identifier === 'test_blok')
   const testBlokDva = blocks.find((b: any) => b.identifier === 'test_blok_dva')
 

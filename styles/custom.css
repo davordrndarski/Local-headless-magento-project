@@ -52,3 +52,23 @@
 .Scroller-root .desktop-dropdown .navDropLinks a {
     width: 100%;
 }
+
+
+/* Cart */
+
+/* .LayoutOverlayBase-overlay.variantSmBottom.variantMdRight.sizeSmFull {
+    position: fixed;
+    right: 0;
+} */
+
+
+/* Mini Cart - Custom Width */
+
+
+
+
+/* Home product */
+
+.slick-slider .mui-style-9lxmmz {
+    display: inline;
+}
