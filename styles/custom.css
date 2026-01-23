@@ -1,0 +1,54 @@
+.custom_block {
+    background: #f2f2f2;
+}
+
+.custom_block .pagebuilder-column-line {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.footer_link_list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.Footer-social {
+    min-width: 100%;
+    display: inline;
+}
+
+.Footer-root {
+    display: inline;
+    padding: 0;
+}
+
+.footer-links {
+    max-width: 1920px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+
+.DesktopNavBar-root .MuiTypography-root {
+    position: relative;
+}
+
+.DesktopNavBar-root .MuiTypography-root .desktop-dropdown {
+    position: absolute;
+    background: #ccc;
+    top: 100%;
+    width: 200px;
+}
+
+.Scroller-root {
+    overflow: visible !important;
+}
+
+.Scroller-root .desktop-dropdown .navDropLinks {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.Scroller-root .desktop-dropdown .navDropLinks a {
+    width: 100%;
+}

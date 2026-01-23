@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { CartFab, useCartEnabled } from '@graphcommerce/magento-cart'
 import { magentoMenuToNavigation } from '@graphcommerce/magento-category'
 import { CmsBlock } from '@graphcommerce/magento-cms'
@@ -36,6 +37,17 @@ import { productListRenderer } from '../ProductListItems/productListRenderer'
 import { Footer } from './Footer'
 import type { LayoutQuery } from './Layout.gql'
 import { Logo } from './Logo'
+
+
+// Dodavanje koda da prepozna HTML
+
+function decodeHtml(html: string) {
+  if (typeof window === 'undefined') return html
+  const txt = document.createElement('textarea')
+  txt.innerHTML = html
+  return txt.value
+}
+
 
 export type LayoutNavigationProps = LayoutQuery &
   Omit<LayoutDefaultProps, 'footer' | 'header' | 'cartFab' | 'menuFab'>
@@ -119,25 +131,49 @@ export function LayoutNavigation(props: LayoutNavigationProps) {
           <>
             <Logo />
 
-            <DesktopNavBar>
-              {menu?.items?.[0]?.children?.slice(0, 2).map((item) => (
-                <DesktopNavItem key={item?.uid} href={`/${item?.url_path}`}>
-                  {item?.name}
+           <DesktopNavBar>
+            {(menu?.items?.[0]?.children ?? []).map((category) => {
+              // State za hover svakog DesktopNavItem
+              const [isHovered, setIsHovered] = useState(false)
+
+              return (
+                <DesktopNavItem
+                  key={category.uid}
+                  tabIndex={0}
+                  sx={{ position: 'relative' }}
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                >
+                  {/* Glavna kategorija */}
+                  <a href={`/${category.url_path}`}>{category.name}</a>
+
+                  {/* Podkategorije */}
+                  {category.children?.length > 0 && (
+                    <div
+                      className="desktop-dropdown"
+                      style={{
+                        display: isHovered ? 'block' : 'none', // React kontrola vidljivosti
+                        position: 'absolute',
+                        top: '100%',
+                        background: '#ccc',
+                        width: '200px',
+                        zIndex: 1000,
+                      }}
+                    >
+                      <div className="navDropLinks">
+                        {category.children.map((sub) => (
+                          <a key={sub.uid} href={`/${sub.url_path}`}>
+                            {sub.name}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </DesktopNavItem>
-              ))}
-              <DesktopNavItem
-                onClick={() => selection.set([menu?.items?.[0]?.uid || ''])}
-                onKeyUp={(evt) => {
-                  if (evt.key === 'Enter') {
-                    selection.set([menu?.items?.[0]?.uid || ''])
-                  }
-                }}
-                tabIndex={0}
-              >
-                {menu?.items?.[0]?.name}
-                <IconSvg src={iconChevronDown} />
-              </DesktopNavItem>
-            </DesktopNavBar>
+              )
+            })}
+          </DesktopNavBar>
+
             <DesktopNavActions>
               <StoreSwitcherButton />
               <SearchField
@@ -168,14 +204,20 @@ export function LayoutNavigation(props: LayoutNavigationProps) {
         footer={
           <Footer
             socialLinks={
-              footerBlock ? (
-                <CmsBlock cmsBlock={footerBlock} productListRenderer={productListRenderer} />
+              footerBlock?.content ? (
+                <div
+                  className="footer-links"
+                  dangerouslySetInnerHTML={{
+                    __html: decodeHtml(footerBlock.content),
+                  }}
+                />
               ) : (
                 <div />
               )
             }
           />
         }
+
         cartFab={<CartFab BadgeProps={{ color: 'secondary' }} />}
         menuFab={<NavigationFab onClick={() => selection.set([])} />}
       >

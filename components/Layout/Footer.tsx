@@ -18,36 +18,18 @@ export function Footer(props: { socialLinks?: React.ReactNode }) {
     <FooterBase
       socialLinks={socialLinks}
       storeSwitcher={<StoreSwitcherButton />}
-      customerService={
-        <Button href='/service' variant='pill'>
-          <Trans>Customer Service</Trans>
-        </Button>
-      }
+      // customerService={
+      //   <Button href='/service' variant='pill'>
+      //     <Trans>Customer Service</Trans>
+      //   </Button>
+      // }
       copyright={
         <>
           <span>
-            {config?.copyright ? (
-              <FindAndReplace source={config.copyright} findAndReplace={[['{YYYY}', year]]} />
-            ) : (
-              <Trans>
-                Copyright© {year} {websiteName}
-              </Trans>
-            )}
+            <Trans>
+              Copyright© {year} Tehnomanija
+            </Trans>
           </span>
-
-          {magentoVersion >= 247 && cartEnabled && (
-            <Link href='/guest/orderstatus' color='textPrimary' underline='always'>
-              <Trans>Order status</Trans>
-            </Link>
-          )}
-          {magentoVersion >= 247 && (
-            <Link href='/service/contact-us' color='textPrimary' underline='always'>
-              <Trans>Contact</Trans>
-            </Link>
-          )}
-          <Link href='/service/newsletter' color='textPrimary' underline='always'>
-            <Trans>Newletter</Trans>
-          </Link>
         </>
       }
     />

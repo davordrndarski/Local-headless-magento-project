@@ -1460,6 +1460,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphcommerce/demo-magento-graphcommerce@npm:^10.0.3":
+  version: 10.0.3
+  resolution: "@graphcommerce/demo-magento-graphcommerce@npm:10.0.3"
+  peerDependencies:
+    "@graphcommerce/eslint-config-pwa": ^10.0.3
+    "@graphcommerce/framer-scroller": ^10.0.3
+    "@graphcommerce/magento-product": ^10.0.3
+    "@graphcommerce/magento-product-configurable": ^10.0.3
+    "@graphcommerce/magento-recently-viewed-products": ^10.0.3
+    "@graphcommerce/next-ui": ^10.0.3
+    "@graphcommerce/prettier-config-pwa": ^10.0.3
+    "@graphcommerce/typescript-config-pwa": ^10.0.3
+    "@mui/material": ^7.0.0
+    framer-motion: ^11.0.0
+    next: "*"
+    react: ^19.2.0
+    react-dom: ^19.2.0
+  checksum: 10c0/9bd3ce6e431fbabc3ea0b78617a1326a4b10f16941ddc269792acf2a7c9974ec1109457c06b41f6b66f1b6d788b950f0cd015cc5de4c1cf5b184a19748c18e16
+  languageName: node
+  linkType: hard
+
 "@graphcommerce/ecommerce-ui@npm:10.0.0":
   version: 10.0.0
   resolution: "@graphcommerce/ecommerce-ui@npm:10.0.0"
@@ -2188,6 +2209,7 @@ __metadata:
     "@emotion/server": "npm:^11.11.0"
     "@emotion/styled": "npm:^11.14.1"
     "@graphcommerce/cli": "npm:10.0.0"
+    "@graphcommerce/demo-magento-graphcommerce": "npm:^10.0.3"
     "@graphcommerce/ecommerce-ui": "npm:10.0.0"
     "@graphcommerce/eslint-config-pwa": "npm:10.0.0"
     "@graphcommerce/framer-next-pages": "npm:10.0.0"
@@ -2279,6 +2301,7 @@ __metadata:
     "@types/react-dom": "npm:^19.2.3"
     "@types/react-is": "npm:^19.2.0"
     "@unts/patch-package": "npm:^8.1.1"
+    babel-plugin-react-compiler: "npm:^1.0.0"
     concurrently: "npm:8.2.2"
     cross-env: "npm:^7.0.3"
     dotenv: "npm:16.6.1"
@@ -7316,6 +7339,15 @@ __metadata:
     cosmiconfig: "npm:^7.0.0"
     resolve: "npm:^1.19.0"
   checksum: 10c0/c6dfb15de96f67871d95bd2e8c58b0c81edc08b9b087dc16755e7157f357dc1090a8dc60ebab955e92587a9101f02eba07e730adc253a1e4cf593ca3ebd3839c
+  languageName: node
+  linkType: hard
+
+"babel-plugin-react-compiler@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "babel-plugin-react-compiler@npm:1.0.0"
+  dependencies:
+    "@babel/types": "npm:^7.26.0"
+  checksum: 10c0/9406267ada8d7dbdfe8906b40ecadb816a5f4cee2922bee23f7729293b369624ee135b5a9b0f263851c263c9787522ac5d97016c9a2b82d1668300e42b18aff8
   languageName: node
   linkType: hard
 
