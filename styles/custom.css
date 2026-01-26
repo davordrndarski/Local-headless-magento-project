@@ -40,7 +40,7 @@
     width: 200px;
 }
 
-.Scroller-root {
+.LayoutDefault-header .Scroller-root {
     overflow: visible !important;
 }
 
@@ -54,15 +54,6 @@
 }
 
 
-/* Cart */
-
-/* .LayoutOverlayBase-overlay.variantSmBottom.variantMdRight.sizeSmFull {
-    position: fixed;
-    right: 0;
-} */
-
-
-/* Mini Cart - Custom Width */
 
 
 

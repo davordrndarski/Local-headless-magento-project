@@ -40,7 +40,6 @@ import { Logo } from './Logo'
 
 
 // Dodavanje koda da prepozna HTML
-
 function decodeHtml(html: string) {
   if (typeof window === 'undefined') return html
   const txt = document.createElement('textarea')
@@ -48,6 +47,46 @@ function decodeHtml(html: string) {
   return txt.value
 }
 
+// Nova komponenta za pojedinačnu kategoriju
+function CategoryNavItem({ category }: { category: any }) {
+  const [isHovered, setIsHovered] = useState(false)
+
+  return (
+    <DesktopNavItem
+      key={category.uid}
+      tabIndex={0}
+      sx={{ position: 'relative' }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Glavna kategorija */}
+      <a href={`/${category.url_path}`}>{category.name}</a>
+
+      {/* Podkategorije */}
+      {category.children?.length > 0 && (
+        <div
+          className="desktop-dropdown"
+          style={{
+            display: isHovered ? 'block' : 'none',
+            position: 'absolute',
+            top: '100%',
+            background: '#ccc',
+            width: '200px',
+            zIndex: 1000,
+          }}
+        >
+          <div className="navDropLinks">
+            {category.children.map((sub: any) => (
+              <a key={sub.uid} href={`/${sub.url_path}`}>
+                {sub.name}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </DesktopNavItem>
+  )
+}
 
 export type LayoutNavigationProps = LayoutQuery &
   Omit<LayoutDefaultProps, 'footer' | 'header' | 'cartFab' | 'menuFab'>
@@ -131,48 +170,11 @@ export function LayoutNavigation(props: LayoutNavigationProps) {
           <>
             <Logo />
 
-           <DesktopNavBar>
-            {(menu?.items?.[0]?.children ?? []).map((category) => {
-              // State za hover svakog DesktopNavItem
-              const [isHovered, setIsHovered] = useState(false)
-
-              return (
-                <DesktopNavItem
-                  key={category.uid}
-                  tabIndex={0}
-                  sx={{ position: 'relative' }}
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
-                >
-                  {/* Glavna kategorija */}
-                  <a href={`/${category.url_path}`}>{category.name}</a>
-
-                  {/* Podkategorije */}
-                  {category.children?.length > 0 && (
-                    <div
-                      className="desktop-dropdown"
-                      style={{
-                        display: isHovered ? 'block' : 'none', // React kontrola vidljivosti
-                        position: 'absolute',
-                        top: '100%',
-                        background: '#ccc',
-                        width: '200px',
-                        zIndex: 1000,
-                      }}
-                    >
-                      <div className="navDropLinks">
-                        {category.children.map((sub) => (
-                          <a key={sub.uid} href={`/${sub.url_path}`}>
-                            {sub.name}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </DesktopNavItem>
-              )
-            })}
-          </DesktopNavBar>
+            <DesktopNavBar>
+              {(menu?.items?.[0]?.children ?? []).map((category: any) => (
+                <CategoryNavItem key={category.uid} category={category} />
+              ))}
+            </DesktopNavBar>
 
             <DesktopNavActions>
               <StoreSwitcherButton />
