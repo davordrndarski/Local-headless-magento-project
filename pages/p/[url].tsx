@@ -49,6 +49,7 @@ import type { LayoutNavigationProps } from '../../components'
 import { LayoutDocument, LayoutNavigation, productListRenderer } from '../../components'
 import { AddProductsToCartView } from '../../components/ProductView/AddProductsToCartView'
 import { Reviews } from '../../components/ProductView/Reviews'
+import { ProductTabs } from '../../components/ProductTabs'
 import type { ProductPage2Query } from '../../graphql/ProductPage2.gql'
 import { ProductPage2Document } from '../../graphql/ProductPage2.gql'
 import { graphqlSharedClient, graphqlSsrClient } from '../../lib/graphql/graphqlSsrClient'
@@ -140,18 +141,30 @@ function ProductPage(props: Props) {
             <ProductWishlistChipDetail {...product} />
           </ProductPageAddToCartActionsRow>
         </ProductPageGallery>
-
-        <ProductPageDescription
-          product={product}
-          fontSize='responsive'
-          right=''
-          productListRenderer={productListRenderer}
-        />
       </AddProductsToCartForm>
 
-      <ProductSpecs title='Specs' {...products} />
-
-      <Reviews title='Reviews' {...product} />
+      {/* PRODUCT TABS - DESCRIPTION, SPECS, REVIEWS */}
+      <ProductTabs>
+        {[
+          <ProductPageDescription
+            key="description"
+            product={product}
+            fontSize='responsive'
+            right=''
+            productListRenderer={productListRenderer}
+          />,
+          <ProductSpecs 
+            key="specs" 
+            title='' 
+            {...products} 
+          />,
+          <Reviews 
+            key="reviews" 
+            title='' 
+            {...product} 
+          />
+        ]}
+      </ProductTabs>
 
       {product.related_products && product.related_products.length > 0 && (
         <ProductScroller

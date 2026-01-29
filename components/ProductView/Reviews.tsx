@@ -83,7 +83,18 @@ export function Reviews(props: ReviewsProps) {
 
   const allReviews = reviewsData?.products?.items?.[0]?.reviews
 
-  if (!allReviews?.items?.length) return null
+  // Ako nema recenzija, kreiraj prazan reviews objekat
+  // Tako ProductReviews komponenta može da prikaže "Write a review" dugme
+  const reviewsToShow = allReviews?.items?.length 
+    ? allReviews 
+    : {
+        items: [],
+        page_info: {
+          current_page: 1,
+          page_size: 100,
+          total_pages: 0
+        }
+      }
 
   return (
     <Row maxWidth='md' id='reviews'>
@@ -101,7 +112,7 @@ export function Reviews(props: ReviewsProps) {
         })}
       >
         <Typography variant='overline' color='textSecondary' component='h2'>
-          {title} ({review_count})
+          {title} {review_count ? `(${review_count})` : ''}
         </Typography>
       </Box>
 
@@ -116,7 +127,7 @@ export function Reviews(props: ReviewsProps) {
         }}
       >
         <ProductReviews
-          reviews={allReviews}
+          reviews={reviewsToShow}
           url_key={url_key ?? ''}
           sku={sku}
           review_count={review_count ?? 0}
