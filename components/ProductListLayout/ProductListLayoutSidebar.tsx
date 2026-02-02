@@ -29,7 +29,10 @@ import { breadcrumbs } from '@graphcommerce/next-config/config'
 import { Container, MediaQuery, memoDeep, StickyBelowHeader, sxx } from '@graphcommerce/next-ui'
 import { Trans } from '@lingui/react/macro'
 import { Box, Typography } from '@mui/material'
+import Link from 'next/link'
 import { ProductListItems, productListRenderer } from '../ProductListItems'
+import { CustomCategorySidebar } from '../CustomCategories/CustomCategorySidebar'
+import { CategoryGrid } from '../CustomCategories/CategoryGrid'
 import type { ProductListLayoutProps } from './types'
 import { useLayoutConfiguration } from './types'
 
@@ -109,7 +112,24 @@ export const ProductListLayoutSidebar = memoDeep(function ProductListLayoutSideb
                 productListRenderer={productListRenderer}
               />
               <MediaQuery query={(theme) => theme.breakpoints.down('md')}>
-                <CategoryChildren params={params}>{category?.children}</CategoryChildren>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 2 }}>
+                  {(category?.children as any)?.map((child: any) => (
+                    <Link
+                      key={child.uid}
+                      href={`/${child.url_path}`}
+                      style={{
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        padding: '8px 16px',
+                        border: '1px solid #ddd',
+                        borderRadius: '4px',
+                        fontSize: '0.875rem',
+                      }}
+                    >
+                      {child.name}
+                    </Link>
+                  ))}
+                </Box>
               </MediaQuery>
             </>
           ) : (
@@ -129,6 +149,12 @@ export const ProductListLayoutSidebar = memoDeep(function ProductListLayoutSideb
           sx={{ gridArea: 'count', width: '100%', my: 0, height: '1em' }}
         />
         <Box sx={{ gridArea: 'items' }}>
+          {/* DODATO - Prikaz kategorija sa thumbnail slikama */}
+          {category?.children && category.children.length > 0 && (
+            <CategoryGrid categories={category.children as any} />
+          )}
+          
+          {/* Proizvodi */}
           {products.items.length <= 0 ? (
             <ProductFiltersProNoResults search={params.search} />
           ) : (
@@ -189,11 +215,7 @@ export const ProductListLayoutSidebar = memoDeep(function ProductListLayoutSideb
           <ProductFiltersProClearAll sx={{ alignSelf: 'center' }} />
           <>
             {category ? (
-              <ProductFiltersProCategorySection
-                category={category}
-                params={params}
-                hideBreadcrumbs
-              />
+              <CustomCategorySidebar category={category as any} />
             ) : (
               <ProductFiltersProCategorySectionSearch menu={menu} defaultExpanded />
             )}

@@ -33,11 +33,11 @@ import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
 import { Divider, Fab } from '@mui/material'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import { productListRenderer } from '../ProductListItems/productListRenderer'
 import { Footer } from './Footer'
 import type { LayoutQuery } from './Layout.gql'
 import { Logo } from './Logo'
-
 
 // Dodavanje koda da prepozna HTML
 function decodeHtml(html: string) {
@@ -47,7 +47,7 @@ function decodeHtml(html: string) {
   return txt.value
 }
 
-// Nova komponenta za pojedinačnu kategoriju
+// Nova komponenta za pojedinačnu kategoriju - SA Next.js Link
 function CategoryNavItem({ category }: { category: any }) {
   const [isHovered, setIsHovered] = useState(false)
 
@@ -59,8 +59,13 @@ function CategoryNavItem({ category }: { category: any }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Glavna kategorija */}
-      <a href={`/${category.url_path}`}>{category.name}</a>
+      {/* Glavna kategorija - Next.js Link */}
+      <Link 
+        href={`/${category.url_path}`}
+        style={{ textDecoration: 'none', color: 'inherit' }}
+      >
+        {category.name}
+      </Link>
 
       {/* Podkategorije */}
       {category.children?.length > 0 && (
@@ -77,9 +82,18 @@ function CategoryNavItem({ category }: { category: any }) {
         >
           <div className="navDropLinks">
             {category.children.map((sub: any) => (
-              <a key={sub.uid} href={`/${sub.url_path}`}>
+              <Link
+                key={sub.uid}
+                href={`/${sub.url_path}`}
+                style={{ 
+                  display: 'block',
+                  padding: '8px 16px',
+                  textDecoration: 'none',
+                  color: 'inherit'
+                }}
+              >
                 {sub.name}
-              </a>
+              </Link>
             ))}
           </div>
         </div>
