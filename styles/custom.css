@@ -54,7 +54,22 @@
 }
 
 
+/* Kategorije listanje */
 
+.category-grid-wrapper .category-grid-item img {
+    position: static !important;
+}
+
+.category-grid-wrapper {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 50px;
+}
+
+.category-grid-wrapper > a {
+    flex: 1;
+    background: #ccc;
+}
 
 
 
