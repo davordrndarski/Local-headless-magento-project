@@ -7,8 +7,26 @@ export const config: PluginConfig = {
   module: '@graphcommerce/graphql',
 }
 
+// Lista GraphQL operacija koje NE treba da imaju auth token
+const PUBLIC_OPERATIONS = [
+  'generateCustomerToken',
+  'createCustomer',
+  'createCustomerV2',
+  'requestPasswordResetEmail',
+  'resetPassword',
+]
+
 const authLink = new ApolloLink((operation, forward) => {
   if (typeof window === 'undefined') {
+    return forward(operation)
+  }
+
+  // Proveri da li je ovo public operacija
+  const operationName = operation.operationName
+  const isPublicOperation = operationName ? PUBLIC_OPERATIONS.includes(operationName) : false
+
+  // Ako je public operacija, ne dodavaj token
+  if (isPublicOperation) {
     return forward(operation)
   }
 
